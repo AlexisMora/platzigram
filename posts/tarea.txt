@@ -1,0 +1,3 @@
+Crear: Tabla Country
+Crear: Tuplas de la Tabla Country(meter datos)
+Hacer: consultas

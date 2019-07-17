@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Platzigram</title>
+</head>
+<body>
+<br><br>
+<div class="container">
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-lg-4 offset-lg-4">
+                <div class="media">
+                    <img src="{{ post.user.picture }}" alt="{{ post.user.name }}" class="mr-3 rouded-circle">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ post.user.name }}</h5>
+                        {{ post.timestamp}}
+                    </div>
+                </div>
+                <img src="{{ post.photo }}" alt="{{ post.title }}" class="img-fluid mt-3 border-rounded">
+                <h6 class="ml-1 mt-1">{{ post.title }}</h6>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
