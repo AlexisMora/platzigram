@@ -1,50 +1,37 @@
 # Django
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
-# utilities
-from datetime import datetime
-
-posts = [
-    {
-        'title': 'Boreal Aurora',
-        'user': {
-            'name': 'Alexis Mora',
-            'picture': 'https://picsum.photos/60/60'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/id/1022/536/354'
-    },
-    {
-        'title': 'Y E E T',
-        'user': {
-            'name': 'Luis Lopez',
-            'picture': 'https://picsum.photos/60/60'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/id/818/600/600'
-    },
-    {
-        'title': 'Nueva Mascota!',
-        'user': {
-            'name': 'Jordi Roig',
-            'picture': 'https://picsum.photos/60/60'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/id/433/600/600'
-    },
-    {
-        'title': 'New Profile Pic!',
-        'user': {
-            'name': 'David Gavilanes',
-            'picture': 'https://picsum.photos/60/60'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://i1.sndcdn.com/artworks-000516282726-jpi2xq-t500x500.jpg'
-    },
-]
+# Forms
+from posts.forms import PostForm
 
 
-# Create your views here.
+# Models
+from posts.models import Post
+
+
+@login_required
 def list_posts(request):
     """List existing posts."""
+    posts = Post.objects.all().order_by('-created')
     return render(request, 'posts/feed.html', {'posts': posts})
+
+
+@login_required
+def create_post(request):
+    """Create new post view."""
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('feed')
+        else:
+            form = PostForm()
+    return render(request=request,
+                  template_name='posts/new.html',
+                  context={
+                      'form': form,
+                      'user': request.user,
+                      'profile': request.user.profile
+                  }
+                  )
