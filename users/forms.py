@@ -1,4 +1,5 @@
-"""User forms"""
+"""User forms."""
+
 # Django
 from django import forms
 
@@ -8,11 +9,14 @@ from users.models import Profile
 
 
 class SignupForm(forms.Form):
+    """Sign up form."""
+
     username = forms.CharField(min_length=4, max_length=50)
+
     password = forms.CharField(
         max_length=70,
-        widget=forms.PasswordInput())
-
+        widget=forms.PasswordInput()
+    )
     password_confirmation = forms.CharField(
         max_length=70,
         widget=forms.PasswordInput()
@@ -30,8 +34,8 @@ class SignupForm(forms.Form):
     def clean_username(self):
         """Username must be unique."""
         username = self.cleaned_data['username']
-        username_is_taken = User.objects.filter(username=username).exists()
-        if username_is_taken:
+        username_taken = User.objects.filter(username=username).exists()
+        if username_taken:
             raise forms.ValidationError('Username is already in use.')
         return username
 
@@ -55,10 +59,3 @@ class SignupForm(forms.Form):
         user = User.objects.create_user(**data)
         profile = Profile(user=user)
         profile.save()
-
-
-class ProfileForm(forms.Form):
-    website = forms.URLField(max_length=200, required=True)
-    biography = forms.CharField(max_length=500, required=False)
-    phone_number = forms.CharField(max_length=20, required=False)
-    picture = forms.ImageField()
